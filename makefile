@@ -2,8 +2,8 @@
 .PHONY: build deploy local
 
 PORT=8080
-project=customerjourney-214813/cj-data-revisions
-dev_project=customerjourney-214813/cj-data-test-revisions
+project=customerjourney-214813/cj-data
+dev_project=customerjourney-214813/cj-data-test
 keyfile=C:/Users/vtula/Documents/cj-data/creds/cj_data.json
 
 build:
