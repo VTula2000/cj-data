@@ -47,7 +47,23 @@ def epi_report(**kwargs):
         return frame
 
 
+# New columns added to table to show 'Website', 'Section' and 'Subsection'
+
 def pages_clean(frame):
+    def website_section(y,x):
+        if y == 'Public' :
+            return x.split('/')[1]
+        else : 
+            return x.split('/')[2]
+
+    def website_sub_section(y,x):
+        try :
+            if y == 'Public' :
+                return x.split('/')[2]
+            else : 
+                return x.split('/')[3]
+        except :
+                return ''
     site = 'https://www.citizensadvice.org.uk'
     country_code = dict([
         ('en-GB',''),
@@ -71,6 +87,15 @@ def pages_clean(frame):
     frame['StopPublish'] = pd.to_datetime(frame['StopPublish'], errors = 'coerce')
     frame['StartPublish'] = pd.to_datetime(frame['StartPublish'], errors = 'coerce')
     frame['Changed'] = pd.to_datetime(frame['Changed'], errors = 'coerce')
+    frame['Website'] = frame.apply(lambda row:'Advisernet' if 'advisernet' in row['url'] else 
+                                   ('BMIS' if 'bmis' in row['url'] else 
+                                    ( 'CABlink' if 'cablink' in row['url'] else 'Public')), axis =1 )    
+    frame['Section'] = frame.apply(lambda row: website_section(row['Website'],row['Path']), axis = 1)
+    frame['Subsection'] = frame.apply(lambda row: website_sub_section(row['Website'],row['Path']) if 
+                                                   website_sub_section(row['Website'],row['Path']) 
+                                                   else '', axis = 1)
+    frame['Section'] = frame.Section.replace('', 'homepage')
+    frame['Subsection'] = frame.Subsection.replace('', 'homepage')
     
     
 

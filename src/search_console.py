@@ -49,7 +49,26 @@ def search_console(startDate,endDate,startRow):
         pass
 
 
+# New columns added to table 'Website', 'Section' and 'Subsection'
+
 def get_data(**kwargs):
+    def website_section(y,x):
+        try :
+            if y == 'Public' :
+                return x.split('/')[3]
+            else : 
+                return x.split('/')[3]
+        except :
+            return ''
+
+    def website_sub_section(y,x):
+        try :
+            if y == 'Public' :
+                return x.split('/')[4]
+            else : 
+                return x.split('/')[4]
+        except :
+            return ''
     today = datetime.date.today()
     date = today - datetime.timedelta(days=2)
     date = date.strftime('%Y-%m-%d')
@@ -71,8 +90,17 @@ def get_data(**kwargs):
             break
         else:
             continue
+            
+    results['Website'] = results.apply(lambda row:'Advisernet' if 'advisernet' in row['page'] else 
+                                   ('BMIS' if 'bmis' in row['page'] else 
+                                    ( 'CABlink' if 'cablink' in row['page'] else 'Public')), axis =1 )    
+    results['Section'] = results.apply(lambda row: website_section(row['Website'],row['page']), axis = 1)
+    results['Subsection'] = results.apply(lambda row: website_sub_section(row['Website'],row['page']) if 
+                                                   website_sub_section(row['Website'],row['page']) 
+                                                   else '', axis = 1)
+    results['Section'] = results.Section.replace('', 'homepage')
+    results['Subsection'] = results.Subsection.replace('', 'homepage')
     return results
-
 
 
 def clean(frame): 
@@ -91,9 +119,6 @@ def clean(frame):
     
 
     return frame
-
-
-
 
 if __name__ == '__main__':
     pass
