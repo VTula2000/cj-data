@@ -27,7 +27,7 @@ urls = {
 
 #def epi_report(site, *args, **kwargs): 
 def epi_report(**kwargs):
-    site = kwargs['site']    
+    site = kwargs['site'] 
     url = urls[site]    
     auth_json = auth.auth('epi')
     username = auth_json['user_name']
@@ -96,6 +96,8 @@ def pages_clean(frame):
                                                    else '', axis = 1)
     frame['Section'] = frame.Section.replace('', 'homepage')
     frame['Subsection'] = frame.Subsection.replace('', 'homepage')
+    frame.SimpleUrl.fillna('',inplace = True)   
+    frame.SimpleUrl = frame.SimpleUrl.astype('str')
     
     
 
